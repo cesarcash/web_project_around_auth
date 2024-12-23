@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import Header from './components/Header';
-import Main from './components/Main';
-import Footer from './components/Footer';
-import ImagePopup from './components/ImagePopup';
-import api from './utils/api';
-import CurrentUserContext from './contexts/CurrentUserContext';
-import EditProfilePopup from './components/EditProfilePopup';
-import EditAvatarPopup from './components/EditAvatarPopup';
-import AddPlacePopup from './components/AddPlacePopup';
+import { Routes, Route } from 'react-router-dom';
+import Header from './Header';
+import Login from './Login';
+import Register from './Register';
+import Main from './Main';
+import Footer from './Footer';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
 
@@ -144,53 +147,39 @@ function App() {
 
         <CurrentUserContext.Provider value={currentUser}>
 
-            {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
+            {/* <Routes> */}
 
-            {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
+                {/* <Route path="/signin" element={<Login/>} />
 
-            {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
+                <Route path="/signup" element={<Register/>} /> */}
 
-            {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
+                {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
 
-            {currentUser && (
-                <div className="page">
-                    <div className="page__container">
-                        <Header></Header>
-                        <Main 
-                            onEditProfileClick={handleEditProfileClick} 
-                            onAddPlaceClick={handleAddPlaceClick} 
-                            onEditAvatarClick={handleEditAvatarClick} 
-                            onCardClick={handleCardClick} 
-                            cards={cards}
-                            onCardLike={handleCardLike}
-                            onCardDelete={handleCardDelete} >
-                        </Main>
-                        <Footer></Footer>
+                {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
+
+                {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
+
+                {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
+
+                {currentUser && (
+                    <div className="page">
+                        <div className="page__container">
+                            <Header></Header>
+                            <Main 
+                                onEditProfileClick={handleEditProfileClick} 
+                                onAddPlaceClick={handleAddPlaceClick} 
+                                onEditAvatarClick={handleEditAvatarClick} 
+                                onCardClick={handleCardClick} 
+                                cards={cards}
+                                onCardLike={handleCardLike}
+                                onCardDelete={handleCardDelete} >
+                            </Main>
+                            <Footer></Footer>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* confirmacion */}
-            {/* <div className="popup" id="popupDelete">
-                <div className="popup__delete">
-                    <button className="button button_action_close" aria-label="Cerrar ventana">
-                        <img src={icon__close} className="button__close-image" alt="Cerrar ventana" />
-                    </button>
-                    <h3 className="popup__delete-title">¿Estás seguro?</h3>
-                    <button className="popup__button" id="buttonDelete" aria-label="Si" value="true">Si</button>
-                </div>
-            </div> */}
-
-            {/* Popup imagen */}
-            {/* <div className="popup" id="popupImage" >
-                <div className="popup__image">
-                    <img className="popup__view-image"  />
-                    <p className="popup__text"></p>
-                    <button className="button button_action_close" aria-label="Cerrar ventana">
-                        <img src={icon__close} className="button__close-image" alt="Cerrar ventana" />
-                    </button>
-                </div>
-            </div> */}
+            {/* </Routes> */}
 
         </CurrentUserContext.Provider>
 
