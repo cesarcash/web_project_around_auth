@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './Header';
 import Login from './Login';
 import Register from './Register';
@@ -20,6 +20,7 @@ function App() {
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [cards, setCards] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect( ()=> {
 
@@ -147,39 +148,84 @@ function App() {
 
         <CurrentUserContext.Provider value={currentUser}>
 
-            {/* <Routes> */}
+            <Routes>
 
-                {/* <Route path="/signin" element={<Login/>} />
+                <Route path="*" element={!isLoggedIn ? (<Navigate to="/signin" replace />) : (
+                    
+                    currentUser ? (
 
-                <Route path="/signup" element={<Register/>} /> */}
+                        <>
 
-                {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
+                            <div className="page">
+                                <div className="page__container">
+                                    <Header />
+                                    <Main
+                                        onEditProfileClick={handleEditProfileClick} 
+                                        onAddPlaceClick={handleAddPlaceClick} 
+                                        onEditAvatarClick={handleEditAvatarClick} 
+                                        onCardClick={handleCardClick} 
+                                        cards={cards}
+                                        onCardLike={handleCardLike}
+                                        onCardDelete={handleCardDelete}
+                                    />
+                                    <Footer />
+                                </div>
+                            </div>
 
-                {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
+                            {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
 
-                {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
+                            {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
 
-                {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
+                            {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
 
-                {currentUser && (
-                    <div className="page">
-                        <div className="page__container">
-                            <Header></Header>
-                            <Main 
-                                onEditProfileClick={handleEditProfileClick} 
-                                onAddPlaceClick={handleAddPlaceClick} 
-                                onEditAvatarClick={handleEditAvatarClick} 
-                                onCardClick={handleCardClick} 
-                                cards={cards}
-                                onCardLike={handleCardLike}
-                                onCardDelete={handleCardDelete} >
-                            </Main>
-                            <Footer></Footer>
-                        </div>
-                    </div>
-                )}
+                            {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 
-            {/* </Routes> */}
+                        </>
+
+                    ) : ''
+                )} />
+
+                <Route path="/signin" element={<Login/>} />
+
+                <Route path="/signup" element={<Register/>} />
+
+                <Route path="/" element={
+
+                    currentUser ? (
+
+                        <>
+
+                            <div className="page">
+                                <div className="page__container">
+                                    <Header />
+                                    <Main
+                                        onEditProfileClick={handleEditProfileClick} 
+                                        onAddPlaceClick={handleAddPlaceClick} 
+                                        onEditAvatarClick={handleEditAvatarClick} 
+                                        onCardClick={handleCardClick} 
+                                        cards={cards}
+                                        onCardLike={handleCardLike}
+                                        onCardDelete={handleCardDelete}
+                                    />
+                                    <Footer />
+                                </div>
+                            </div>
+
+                            {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
+
+                            {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
+
+                            {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
+
+                            {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
+
+                        </>
+
+                    ) : ''
+
+                } />                
+
+            </Routes>
 
         </CurrentUserContext.Provider>
 
