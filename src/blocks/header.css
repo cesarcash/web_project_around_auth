@@ -1,6 +1,8 @@
 .header {
     border-bottom: 1px solid #545454;
     padding-top: 28px;
+    display: flex;
+    justify-content: space-between; 
 }
 
 .header__logo {
@@ -10,10 +12,28 @@
     display: block;
 }
 
+.header__nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.header__item {
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.header__item_link {
+    text-decoration: none;
+    color: #fff;
+}
+
 @media screen and (min-width: 1280px){
 
     .header {
         padding-top: 45px;
+        background-color: red;
+
     }
 
     .header__logo {

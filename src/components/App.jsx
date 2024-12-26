@@ -6,6 +6,7 @@ import Register from './Register';
 import Main from './Main';
 import Footer from './Footer';
 import ImagePopup from './ImagePopup';
+import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
@@ -150,50 +151,15 @@ function App() {
 
             <Routes>
 
-                <Route path="*" element={!isLoggedIn ? (<Navigate to="/signin" replace />) : (
-                    
-                    currentUser ? (
-
-                        <>
-
-                            <div className="page">
-                                <div className="page__container">
-                                    <Header />
-                                    <Main
-                                        onEditProfileClick={handleEditProfileClick} 
-                                        onAddPlaceClick={handleAddPlaceClick} 
-                                        onEditAvatarClick={handleEditAvatarClick} 
-                                        onCardClick={handleCardClick} 
-                                        cards={cards}
-                                        onCardLike={handleCardLike}
-                                        onCardDelete={handleCardDelete}
-                                    />
-                                    <Footer />
-                                </div>
-                            </div>
-
-                            {isEditAvatarPopupOpen && (<EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>)}
-
-                            {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
-
-                            {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
-
-                            {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
-
-                        </>
-
-                    ) : ''
-                )} />
-
                 <Route path="/signin" element={<Login/>} />
 
                 <Route path="/signup" element={<Register/>} />
 
                 <Route path="/" element={
-
+                    
                     currentUser ? (
 
-                        <>
+                        <ProtectedRoute isLoggedIn={isLoggedIn}>
 
                             <div className="page">
                                 <div className="page__container">
@@ -219,7 +185,7 @@ function App() {
 
                             {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 
-                        </>
+                        </ProtectedRoute>
 
                     ) : ''
 

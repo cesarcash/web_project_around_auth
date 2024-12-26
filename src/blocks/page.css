@@ -1,5 +1,6 @@
 .page {
     background-color: #000;
+    min-height: 100vh;
     font-family: 'Inter Regular';
     font-size: 16px;
     line-height: 22px;
