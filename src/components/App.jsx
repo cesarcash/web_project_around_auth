@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, NavLink} from 'react-router-dom';
 import Header from './Header';
 import Login from './Login';
 import Register from './Register';
@@ -12,16 +12,22 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import InfoTooltip from './InfoTooltip';
+import * as auth from '../utils/auth';
 
 function App() {
 
     const [isEditProfilePopupOpen, setEditProfile] = useState(false);
     const [isAddPlacePopupOpen, setAddPlace] = useState(false);
     const [isEditAvatarPopupOpen, setEditAvatar] = useState(false);
+    const [isInfoTooltipOpen, setInfoTooltip] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [cards, setCards] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userData, setUserData] = useState({email: '', password: ''});
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+    const navigate = useNavigate();
 
     useEffect( ()=> {
 
@@ -100,6 +106,7 @@ function App() {
         setEditProfile(false)
         setAddPlace(false)
         setSelectedCard(null)
+        setInfoTooltip(false)
 
     }
 
@@ -145,15 +152,45 @@ function App() {
 
     }
 
+    const handleRegistration = ({email, passowrd}) => {
+        auth.signup(email,passowrd)
+        .then(() => {
+            navigate('/signin')
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    }
+
+    const handleLogin = ({email, password}) => {
+
+        if(!email || !password) return false;
+
+        auth.signin(email, password)
+        .then((data) => {
+            
+            if(data.jwt){
+                setUserData(data.user);
+                setIsLoggedIn(true);
+                navigate('/');
+            }
+
+        })
+        .catch(err => {
+            console.error(err);
+        })
+
+    }
+
     return (        
 
         <CurrentUserContext.Provider value={currentUser}>
 
             <Routes>
 
-                <Route path="/signin" element={<Login/>} />
+                <Route path="/signin" element={<Login handleLogin={handleLogin}/>} />
 
-                <Route path="/signup" element={<Register/>} />
+                <Route path="/signup" element={<Register handleRegistration={handleRegistration} />} />
 
                 <Route path="/" element={
                     
@@ -163,7 +200,17 @@ function App() {
 
                             <div className="page">
                                 <div className="page__container">
-                                    <Header />
+                                    <Header>
+                                        <ul className='header__nav'>
+                                            <li className='header__item'>{userData.email ? userData.email : ''}</li>
+                                            <li className='header__item'>
+                                                <NavLink to="/signin" className="header__item-link header__item-link--secondary">
+                                                    Cerrar sesión
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </Header>
+
                                     <Main
                                         onEditProfileClick={handleEditProfileClick} 
                                         onAddPlaceClick={handleAddPlaceClick} 
@@ -182,6 +229,8 @@ function App() {
                             {isEditProfilePopupOpen && (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}></EditProfilePopup>)}
 
                             {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
+
+                            {isInfoTooltipOpen && (<InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}><p>Contenido</p></InfoTooltip>) }
 
                             {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 

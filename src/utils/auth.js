@@ -1,6 +1,6 @@
 const BASE_URL = 'https://se-register-api.en.tripleten-services.com/v1';
 
-export const signup = ({username, password}) => { //registro
+export const signup = ({email, password}) => { //registro
 
     return fetch(`${BASE_URL}/signup`, {
         method: 'POST',
@@ -8,7 +8,7 @@ export const signup = ({username, password}) => { //registro
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({email, password})
     })
     .then((res) => {
         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
@@ -16,7 +16,7 @@ export const signup = ({username, password}) => { //registro
 
 }
 
-export const signin = ({username, password}) => { //login
+export const signin = ({email, password}) => { //login
 
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
@@ -24,7 +24,7 @@ export const signin = ({username, password}) => { //login
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({email, password})
     })
     .then((res) => {
         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
