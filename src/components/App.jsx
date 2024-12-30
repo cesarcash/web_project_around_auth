@@ -13,7 +13,10 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
-import * as auth from '../utils/auth';
+import auth from '../utils/auth';
+import { getToken, setToken, removeToken } from '../utils/token';
+import icon__success from '../images/icon__success.svg';
+import icon__error from '../images/icon__error.svg';
 
 function App() {
 
@@ -25,10 +28,10 @@ function App() {
     const [currentUser, setCurrentUser] = useState(null);
     const [cards, setCards] = useState([]);
     const [userData, setUserData] = useState({email: '', password: ''});
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navigate = useNavigate();
-
+    
     useEffect( ()=> {
 
         const fetchInitialCards = async () => {
@@ -55,8 +58,34 @@ function App() {
     
         }
 
+        // const fetchLoginUser = async () => {
+
+        //     try {
+
+        //         const user = await auth.getUserInfo();
+        //         console.log("🚀 ~ fetchLoginUser ~ user:", user)
+
+        //     }catch(error) {
+        //         alert(`Error ${error}`);
+        //     }
+
+        // }
+
         fetchUserInfo()
         fetchInitialCards()
+        // fetchLoginUser()
+
+        // const jwt = getToken();
+        
+        // if(!jwt) return;
+        
+        // auth.getUserInfo(jwt)
+        // .then((res) => {
+        //     setIsLoggedIn(true)
+        //     setUserData({email: res.data.email})
+        //     navigate('/');
+        // })
+        // .catch(console.error)
         
     },[])
     
@@ -152,25 +181,33 @@ function App() {
 
     }
 
-    const handleRegistration = ({email, passowrd}) => {
-        auth.signup(email,passowrd)
+    const handleRegistration = ({email, password}) => {
+        
+        auth.signup({email,password})
         .then(() => {
+            console.log('Registro exitoso');
+
+            setInfoTooltip(true)
             navigate('/signin')
         })
-        .catch(err => {
+        .catch((err) => {
+            setInfoTooltip(false)
             console.error(err)
         })
+
     }
 
     const handleLogin = ({email, password}) => {
 
         if(!email || !password) return false;
 
-        auth.signin(email, password)
+        auth.signin({email, password})
         .then((data) => {
+            console.log("🚀 ~ handleLogin ~ data:", data)
             
-            if(data.jwt){
-                setUserData(data.user);
+            if(data.token){
+                setUserData({email});
+                setToken(data.token);
                 setIsLoggedIn(true);
                 navigate('/');
             }
@@ -179,6 +216,28 @@ function App() {
         .catch(err => {
             console.error(err);
         })
+
+    }
+
+    const htmlInfoTooltip = (response) => {
+        const message = response
+          ? '¡Correcto! Ya estás registrado.'
+          : 'Uy, algo salió mal. Por favor, inténtalo de nuevo.';
+        const icon = response ? <img src={icon__success} alt="Exito" className="popup__image-status"  /> : <img src={icon__error} alt="Error" className="popup__image-status" />;
+    
+        return (
+          <div className="popup__tooltip" >
+            {icon}
+            <p className="popup__text-status">{message}</p>
+          </div>
+        );
+    };
+
+    const signOut = () => {
+
+        removeToken();
+        setIsLoggedIn(false);
+        navigate('/signin');
 
     }
 
@@ -204,9 +263,9 @@ function App() {
                                         <ul className='header__nav'>
                                             <li className='header__item'>{userData.email ? userData.email : ''}</li>
                                             <li className='header__item'>
-                                                <NavLink to="/signin" className="header__item-link header__item-link--secondary">
+                                                <button onClick={signOut} className="header__item-button header__item-button--secondary">
                                                     Cerrar sesión
-                                                </NavLink>
+                                                </button>
                                             </li>
                                         </ul>
                                     </Header>
@@ -230,7 +289,11 @@ function App() {
 
                             {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
 
-                            {isInfoTooltipOpen && (<InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}><p>Contenido</p></InfoTooltip>) }
+                            {isInfoTooltipOpen && (
+                                <InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}>
+                                    {htmlInfoTooltip(isInfoTooltipOpen)}
+                                </InfoTooltip>
+                            )}
 
                             {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 

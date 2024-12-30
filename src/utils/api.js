@@ -1,10 +1,12 @@
-import {configHeaders,url} from './constants';
+import {configHeaders,url, BASE_URL} from './constants';
+// import { getToken } from './token';
 
 class Api {
 
     constructor({headers,url}){
         this._headers = headers;
         this._url = url;
+        
     }
 
     async _makeRequest(endpoint, method = 'GET', body = null){
@@ -83,6 +85,8 @@ const api = new Api({
       type: configHeaders.type
     },
     url
+    // url: BASE_URL
+    // token: getToken()
 });
 
 export default api;

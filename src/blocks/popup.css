@@ -70,6 +70,27 @@
     font-size: 12px;
 }
 
+.popup__tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    margin: 60px auto;
+}
+
+.popup__image-status {
+
+}
+
+.popup__text-status {
+    color: #000;
+    font-family: 'Inter Black';
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    margin: 0;
+}
+
 .popup_opened {
     display: flex;
 }

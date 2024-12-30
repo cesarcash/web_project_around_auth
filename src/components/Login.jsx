@@ -28,7 +28,7 @@ function Login({handleLogin}) {
                     <Header>
                         <ul className='header__nav'>
                             <li className='header__item'>
-                                <NavLink to="/signup" className="header__item-link">
+                                <NavLink to="/signup" className="header__item-button">
                                     Registrate
                                 </NavLink>
                             </li>
@@ -37,7 +37,7 @@ function Login({handleLogin}) {
                     <main className="login">
                         <section className="login__container">
                             <h2 className="login__title">Inicia sesión</h2>
-                            <form id="" className="login__form" onSubmit={handleSubmit}>
+                            <form className="login__form" onSubmit={handleSubmit}>
                                 <input type="text" className="login__input" name="email" id="name-email" required placeholder="Correo electrónico" minLength="2" maxLength="40" value={data.email} onChange={handleChange} />
                                 <input type="password" className="login__input" name="password" id="name-password" required placeholder="Contraseña" minLength="2" maxLength="40" value={data.password} onChange={handleChange} />
                                 <button type="submit" className="login__button" aria-label="Inicia sesión">Inicia sesión</button>

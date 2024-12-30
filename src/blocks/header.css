@@ -32,12 +32,14 @@
     line-height: 22px;
 }
 
-.header__item-link {
+.header__item-button {
     text-decoration: none;
     color: #fff;
+    background-color: transparent;
+    border: none;
 }
 
-.header__item-link--secondary {
+.header__item-button--secondary {
     text-decoration: none;
     color: #A9A9A9;
 }

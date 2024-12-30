@@ -34,7 +34,7 @@ function Register({handleRegistration}) {
                     <Header>
                         <ul className='header__nav'>
                             <li className='header__item'>
-                                <NavLink to="/signin" className="header__item-link">
+                                <NavLink to="/signin" className="header__item-button">
                                     Iniciar sesión
                                 </NavLink>
                             </li>
