@@ -1,5 +1,4 @@
-import { configHeaders, url, BASE_URL } from "./constants";
-import { getToken } from "./token";
+import { configHeaders, BASE_URL } from "./constants";
 
 class Api {
 
@@ -39,11 +38,11 @@ class Api {
     }
 
     signup(data){
-        return this._makeRequest('/signup','POST',data)
+        return this._makeRequest('/signup','POST',data) // registro
     }
 
     signin(data){
-        return this._makeRequest('/signin','POST',data)
+        return this._makeRequest('/signin','POST',data) // login
     }
 
     getUserInfo(){
@@ -54,57 +53,11 @@ class Api {
 
 const auth = new Api({
     headers: {
-        type: configHeaders.type
+        accept: configHeaders.accept,
+        type: configHeaders.type,
+        authorization: configHeaders.token
     },
-    url
+    url: BASE_URL
 })
 
 export default auth;
-
-// export const signup = (email, password) => { //registro
-
-//     return fetch(`${url}/signup`, {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({email, password})
-//     })
-//     .then((res) => {
-//         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-//     })
-
-// }
-
-// export const signin = (email, password) => { //login
-
-//     return fetch(`${url}/signin`, {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({email, password})
-//     })
-//     .then((res) => {
-//         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-//     })
-
-// }
-
-// export const getUserInfo = (jwt) => {
-
-//     return fetch(`${url}/users/me`, {
-//         method: 'GET',
-//         headers: {
-//             Accept: "application/json",
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${jwt}`
-//         },
-//     })
-//     .then((res) => {
-//         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-//     })
-
-// }

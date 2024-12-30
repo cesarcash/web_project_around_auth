@@ -18,6 +18,8 @@ import { getToken, setToken, removeToken } from '../utils/token';
 import icon__success from '../images/icon__success.svg';
 import icon__error from '../images/icon__error.svg';
 
+// import { BASE_URL } from '../utils/constants';
+
 function App() {
 
     const [isEditProfilePopupOpen, setEditProfile] = useState(false);
@@ -42,7 +44,7 @@ function App() {
                 setCards(cardsData)
         
             }catch(error){
-                alert('Error:',error)
+                console.error('Error:',error)
             }
     
         }
@@ -53,34 +55,53 @@ function App() {
                 const userInfo = await api.getInfoUser();
                 setCurrentUser(userInfo);
             } catch(error) {
-                alert(`Error ${error}`);
+                console.error(`Error ${error}`);
             }
     
         }
 
-        // const fetchLoginUser = async () => {
+        const fetchLoginUser = async () => {
 
-        //     try {
+            try {
 
-        //         const user = await auth.getUserInfo();
-        //         console.log("🚀 ~ fetchLoginUser ~ user:", user)
+                const user = await auth.getUserInfo();
+                console.log("🚀 ~ fetchLoginUser ~ user:", user)
+                setIsLoggedIn(true)
+                setUserData({email: user.data.email})
+                navigate('/');
 
-        //     }catch(error) {
-        //         alert(`Error ${error}`);
-        //     }
+            }catch(error) {
+                console.error(`Error ${error}`);
+            }
 
-        // }
+        }
 
         fetchUserInfo()
         fetchInitialCards()
-        // fetchLoginUser()
+        fetchLoginUser()
 
         // const jwt = getToken();
-        
         // if(!jwt) return;
+
+        // const getUserInfo = (jwt) => {
         
-        // auth.getUserInfo(jwt)
+        //     return fetch(`${BASE_URL}/users/me`, {
+        //         method: 'GET',
+        //         headers: {
+        //             "Accept": "application/json",
+        //             "Content-Type": "application/json",
+        //             "Authorization": `Bearer ${jwt}`
+        //         },
+        //     })
+        //     .then((res) => {
+        //         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+        //     })
+        
+        // }
+
+        // getUserInfo(jwt)
         // .then((res) => {
+        //     console.log("🚀 ~ .then ~ res:", res)
         //     setIsLoggedIn(true)
         //     setUserData({email: res.data.email})
         //     navigate('/');
@@ -106,7 +127,7 @@ function App() {
         try {
             await api.deleteCard(card._id)
         }catch(error){
-            alert('Error: ',error)
+            console.error('Error: ',error)
         }
 
         setCards(cards.filter(itemCard => itemCard._id !== card._id ))
@@ -148,7 +169,7 @@ function App() {
             closeAllPopups();
 
         }catch(error){
-            alert(`Error: ${error}`);
+            console.error(`Error: ${error}`);
         }
 
     }
@@ -162,7 +183,7 @@ function App() {
             closeAllPopups();
 
         }catch(error){
-            alert(`Error: ${error}`);
+            console.error(`Error: ${error}`);
         }
 
     }
@@ -176,7 +197,7 @@ function App() {
             closeAllPopups();
 
         }catch(error){
-            alert(`Error: ${error}`);
+            console.error(`Error: ${error}`);
         }        
 
     }
@@ -203,11 +224,10 @@ function App() {
 
         auth.signin({email, password})
         .then((data) => {
-            console.log("🚀 ~ handleLogin ~ data:", data)
             
             if(data.token){
-                setUserData({email});
                 setToken(data.token);
+                setUserData({email});
                 setIsLoggedIn(true);
                 navigate('/');
             }
