@@ -18,8 +18,6 @@ import { getToken, setToken, removeToken } from '../utils/token';
 import icon__success from '../images/icon__success.svg';
 import icon__error from '../images/icon__error.svg';
 
-// import { BASE_URL } from '../utils/constants';
-
 function App() {
 
     const [isEditProfilePopupOpen, setEditProfile] = useState(false);
@@ -31,6 +29,7 @@ function App() {
     const [cards, setCards] = useState([]);
     const [userData, setUserData] = useState({email: '', password: ''});
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isTooltip,setTooltip] = useState(false);
 
     const navigate = useNavigate();
     
@@ -65,7 +64,6 @@ function App() {
             try {
 
                 const user = await auth.getUserInfo();
-                console.log("🚀 ~ fetchLoginUser ~ user:", user)
                 setIsLoggedIn(true)
                 setUserData({email: user.data.email})
                 navigate('/');
@@ -78,35 +76,12 @@ function App() {
 
         fetchUserInfo()
         fetchInitialCards()
-        fetchLoginUser()
 
-        // const jwt = getToken();
-        // if(!jwt) return;
+        const token = getToken();
 
-        // const getUserInfo = (jwt) => {
-        
-        //     return fetch(`${BASE_URL}/users/me`, {
-        //         method: 'GET',
-        //         headers: {
-        //             "Accept": "application/json",
-        //             "Content-Type": "application/json",
-        //             "Authorization": `Bearer ${jwt}`
-        //         },
-        //     })
-        //     .then((res) => {
-        //         return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-        //     })
-        
-        // }
-
-        // getUserInfo(jwt)
-        // .then((res) => {
-        //     console.log("🚀 ~ .then ~ res:", res)
-        //     setIsLoggedIn(true)
-        //     setUserData({email: res.data.email})
-        //     navigate('/');
-        // })
-        // .catch(console.error)
+        if(token){
+            fetchLoginUser()
+        }
         
     },[])
     
@@ -202,17 +177,18 @@ function App() {
 
     }
 
-    const handleRegistration = ({email, password}) => {
+    const handleRegistration = ({email, password}) => { //registro
         
         auth.signup({email,password})
         .then(() => {
-            console.log('Registro exitoso');
 
+            setTooltip(true);
             setInfoTooltip(true)
             navigate('/signin')
+            console.log('Registro exitoso');
+            
         })
         .catch((err) => {
-            setInfoTooltip(false)
             console.error(err)
         })
 
@@ -311,7 +287,7 @@ function App() {
 
                             {isInfoTooltipOpen && (
                                 <InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}>
-                                    {htmlInfoTooltip(isInfoTooltipOpen)}
+                                    {htmlInfoTooltip(isTooltip)}
                                 </InfoTooltip>
                             )}
 

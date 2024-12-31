@@ -1,4 +1,4 @@
-import { configHeaders, BASE_URL } from "./constants";
+import { AuthConfigHeaders, BASE_URL } from "./constants";
 
 class Api {
 
@@ -13,11 +13,6 @@ class Api {
             method,
             headers: {...this._headers}
         }
-
-        // const token = getToken();
-        // if(token){
-        //     options.headers['Authorization'] = `Bearer ${token}`;
-        // }
 
         if(body){
             options.headers['Content-Type'] = 'application/json';
@@ -53,9 +48,9 @@ class Api {
 
 const auth = new Api({
     headers: {
-        accept: configHeaders.accept,
-        type: configHeaders.type,
-        authorization: configHeaders.token
+        accept: AuthConfigHeaders.accept,
+        type: AuthConfigHeaders.type,
+        authorization: AuthConfigHeaders.token
     },
     url: BASE_URL
 })

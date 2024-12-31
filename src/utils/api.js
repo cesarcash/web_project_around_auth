@@ -1,4 +1,4 @@
-import {configHeaders, BASE_URL} from './constants';
+import {ApiConfigHeaders, API_URL} from './constants';
 // import { getToken } from './token';
 
 class Api {
@@ -81,11 +81,11 @@ class Api {
 
 const api = new Api({
     headers: {
-        accept: configHeaders.accept,
-        type: configHeaders.type,
-        authorization: configHeaders.token
+        accept: ApiConfigHeaders.accept,
+        type: ApiConfigHeaders.type,
+        authorization: ApiConfigHeaders.token
     },
-    url: BASE_URL
+    url: API_URL
 });
 
 export default api;
