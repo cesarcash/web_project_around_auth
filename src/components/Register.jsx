@@ -4,7 +4,8 @@ import Header from './Header';
 import Footer from './Footer';
 import { useState } from 'react';
 
-function Register({handleRegistration}) {
+
+function Register({handleRegistration,children}) {
 
     const [data,setData] = useState({
         email: '',
@@ -54,6 +55,7 @@ function Register({handleRegistration}) {
                     <Footer />
                 </div>
             </div>
+            {children}
         </>
     );
 }

@@ -15,21 +15,21 @@ import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
 import auth from '../utils/auth';
 import { getToken, setToken, removeToken } from '../utils/token';
-import icon__success from '../images/icon__success.svg';
-import icon__error from '../images/icon__error.svg';
+
 
 function App() {
 
     const [isEditProfilePopupOpen, setEditProfile] = useState(false);
     const [isAddPlacePopupOpen, setAddPlace] = useState(false);
     const [isEditAvatarPopupOpen, setEditAvatar] = useState(false);
-    const [isInfoTooltipOpen, setInfoTooltip] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [cards, setCards] = useState([]);
     const [userData, setUserData] = useState({email: '', password: ''});
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isTooltip,setTooltip] = useState(false);
+    const [isInfoTooltipOpen, setInfoTooltip] = useState(false); //abre modal
+    // const [isTooltip,setTooltip] = useState(false); //mensaje de ventana
+    const [messageModal, setMessageModal] = useState({isOk: '', message: ''});
 
     const navigate = useNavigate();
     
@@ -68,8 +68,9 @@ function App() {
                 setUserData({email: user.data.email})
                 navigate('/');
 
-            }catch(error) {
-                console.error(`Error ${error}`);
+            }catch(err) {
+                const errorMessage = err.statusCode === 400 ? 'Token no proporcionado o proporcionado en el formato incorrecto' : err.statusCode === 401 ? 'El token provisto es inválido' : `Unexpected Error: ${err.message}`;
+                setMessageModal({isOk: false, message: errorMessage});
             }
 
         }
@@ -132,6 +133,7 @@ function App() {
         setAddPlace(false)
         setSelectedCard(null)
         setInfoTooltip(false)
+        setMessageModal({isOk: '', message: ''})
 
     }
 
@@ -179,16 +181,15 @@ function App() {
 
     const handleRegistration = async ({email, password}) => { //registro
         
+        setInfoTooltip(true)
+
         try {
             await auth.signup({email, password})
-            setTooltip(true);
-            setInfoTooltip(true)
-            navigate('/signin')
-            console.log('Registro exitoso');
+            setMessageModal({isOk: true, message: 'Te has registrado'})
         } catch (err){
-
+            
             const errorMessage = err.statusCode === 400 ? 'Uno de los campos se rellenó de forma incorrecta' : `Unexpected Error: ${err.message}`;
-            console.log(errorMessage)
+            setMessageModal({isOk: false, message: errorMessage})
 
         }
 
@@ -208,25 +209,12 @@ function App() {
                 navigate('/');
             }
 
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            const errorMessage = err.statusCode === 400 ? 'No se ha proporcionado uno o más campos' : err.statusCode === 401 ? 'no se ha encontrado al usuario con el correo electrónico especificado' : `Unexpected Error: ${err.message}`;
+            setMessageModal({isOk: false, message: errorMessage})
         }
 
     }
-
-    const htmlInfoTooltip = (response) => {
-        const message = response
-          ? '¡Correcto! Ya estás registrado.'
-          : 'Uy, algo salió mal. Por favor, inténtalo de nuevo.';
-        const icon = response ? <img src={icon__success} alt="Exito" className="popup__image-status"  /> : <img src={icon__error} alt="Error" className="popup__image-status" />;
-    
-        return (
-          <div className="popup__tooltip" >
-            {icon}
-            <p className="popup__text-status">{message}</p>
-          </div>
-        );
-    };
 
     const signOut = () => {
 
@@ -242,9 +230,13 @@ function App() {
 
             <Routes>
 
-                <Route path="/signin" element={<Login handleLogin={handleLogin}/>} />
+                <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
 
-                <Route path="/signup" element={<Register handleRegistration={handleRegistration} />} />
+                <Route path="/signup" element={
+                    <Register handleRegistration={handleRegistration} >
+                        <InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} message={messageModal} onClose={closeAllPopups} />
+                    </Register>
+                } />
 
                 <Route path="/" element={
                     
@@ -284,11 +276,11 @@ function App() {
 
                             {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
 
-                            {isInfoTooltipOpen && (
+                            {/* {isInfoTooltipOpen && (
                                 <InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}>
                                     {htmlInfoTooltip(isTooltip)}
                                 </InfoTooltip>
-                            )}
+                            )} */}
 
                             {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 
