@@ -1,5 +1,4 @@
 import {ApiConfigHeaders, API_URL} from './constants';
-// import { getToken } from './token';
 
 class Api {
 

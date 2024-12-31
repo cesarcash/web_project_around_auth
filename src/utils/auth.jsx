@@ -1,4 +1,5 @@
 import { AuthConfigHeaders, BASE_URL } from "./constants";
+import HttpStatus from "../enums/http";
 
 class Api {
 
@@ -22,11 +23,15 @@ class Api {
         try {
             
             const res = await fetch(`${this._url}${endpoint}`, options);
-            if(!res.ok) throw new Error(`Server error: ${res.status}`);
+            if(!res.ok) {
+                const error = new Error(`Error ${res.status}: ${res.statusText || 'Solicitud fallida'}`);
+                error.statusCode = res.status;
+                throw error
+            }
             return await res.json();
 
         }catch(error){
-            console.error(`Server error: ${error}`);
+            console.error(`Error en signup: ${error.message}`);
             throw error;
         }
 

@@ -177,30 +177,30 @@ function App() {
 
     }
 
-    const handleRegistration = ({email, password}) => { //registro
+    const handleRegistration = async ({email, password}) => { //registro
         
-        auth.signup({email,password})
-        .then(() => {
-
+        try {
+            await auth.signup({email, password})
             setTooltip(true);
             setInfoTooltip(true)
             navigate('/signin')
             console.log('Registro exitoso');
-            
-        })
-        .catch((err) => {
-            console.error(err)
-        })
+        } catch (err){
+
+            const errorMessage = err.statusCode === 400 ? 'Uno de los campos se rellenó de forma incorrecta' : `Unexpected Error: ${err.message}`;
+            console.log(errorMessage)
+
+        }
 
     }
 
-    const handleLogin = ({email, password}) => {
+    const handleLogin = async ({email, password}) => {
 
         if(!email || !password) return false;
 
-        auth.signin({email, password})
-        .then((data) => {
-            
+        try {
+
+            const data = await auth.signin({email,password});
             if(data.token){
                 setToken(data.token);
                 setUserData({email});
@@ -208,10 +208,9 @@ function App() {
                 navigate('/');
             }
 
-        })
-        .catch(err => {
-            console.error(err);
-        })
+        } catch (error) {
+            console.log(error)
+        }
 
     }
 
