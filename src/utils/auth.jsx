@@ -1,5 +1,4 @@
 import { AuthConfigHeaders, BASE_URL } from "./constants";
-import HttpStatus from "../enums/http";
 
 class Api {
 

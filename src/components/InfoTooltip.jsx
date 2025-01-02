@@ -15,7 +15,6 @@ const InfoTooltip = (props) => {
                     <img src={icon__close} className="button__close-image" alt="Cerrar ventana" />
                 </button>
                 <div className="popup__content" >
-                    {/* {props.children} */}
                     <div className="popup__tooltip" >
                         {imageConfirm}
                         <p className="popup__text-status">{props.message.message}</p>

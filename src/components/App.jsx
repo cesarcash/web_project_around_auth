@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate, useNavigate, NavLink} from 'react-router-dom';
+import { Routes, Route, useNavigate} from 'react-router-dom';
 import Header from './Header';
 import Login from './Login';
 import Register from './Register';
@@ -16,7 +16,6 @@ import InfoTooltip from './InfoTooltip';
 import auth from '../utils/auth';
 import { getToken, setToken, removeToken } from '../utils/token';
 
-
 function App() {
 
     const [isEditProfilePopupOpen, setEditProfile] = useState(false);
@@ -27,8 +26,7 @@ function App() {
     const [cards, setCards] = useState([]);
     const [userData, setUserData] = useState({email: '', password: ''});
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isInfoTooltipOpen, setInfoTooltip] = useState(false); //abre modal
-    // const [isTooltip,setTooltip] = useState(false); //mensaje de ventana
+    const [isInfoTooltipOpen, setInfoTooltip] = useState(false); 
     const [messageModal, setMessageModal] = useState({isOk: '', message: ''});
 
     const navigate = useNavigate();
@@ -210,6 +208,7 @@ function App() {
             }
 
         } catch (err) {
+            setInfoTooltip(true)
             const errorMessage = err.statusCode === 400 ? 'No se ha proporcionado uno o más campos' : err.statusCode === 401 ? 'no se ha encontrado al usuario con el correo electrónico especificado' : `Unexpected Error: ${err.message}`;
             setMessageModal({isOk: false, message: errorMessage})
         }
@@ -276,19 +275,13 @@ function App() {
 
                             {isAddPlacePopupOpen && (<AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit}></AddPlacePopup>)}
 
-                            {/* {isInfoTooltipOpen && (
-                                <InfoTooltip name="tooltip" isOpen={isInfoTooltipOpen} onClose={closeAllPopups}>
-                                    {htmlInfoTooltip(isTooltip)}
-                                </InfoTooltip>
-                            )} */}
-
                             {selectedCard && (<ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>)}
 
                         </ProtectedRoute>
 
                     ) : ''
 
-                } />                
+                } />
 
             </Routes>
 
